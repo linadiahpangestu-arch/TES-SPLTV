@@ -395,7 +395,7 @@ function finishAndShowResults() {
   let resultHTML = "";
 
   QUESTIONS.forEach(q,i) => {
-   const sel = document.querySelector(`input[name='q${i}']:checked`);
+   const sel = document.querySelector(`input[name='q${q.id}']:checked`);
     const userAns = sel ? parseInt(sel.value) : null;
     const displayUserAns = sel ? q.options[userAns] : "(tidak dijawab)";
     const displayCorrectAns = q.options[q.answer];
@@ -463,7 +463,7 @@ switch (cat) {
     detail = "Kemampuan memilih metode penyelesaian yang paling efisien (substitusi, eliminasi, atau campuran) sesuai karakteristik soal.";
     break;
 }
-y
+
 
   analysis += `
     <li>
