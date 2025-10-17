@@ -392,29 +392,45 @@ function finishAndShowResults() {
   let score = 0;
   let total = QUESTIONS.length;
   let catScores = {};
-  let resultHTML = "";
+  
+   let resultHTML = `
+    <h2 class="text-xl font-semibold mb-2 text-center text-blue-700">Hasil Evaluasi</h2>
+    <p class="text-center mb-4">Waktu pengerjaan: ${minutes} menit ${seconds} detik</p>
+  `;
 
-  QUESTIONS.forEach((q,i) => {
-   const sel = document.querySelector(`input[name='q${q.id}']:checked`);
-    const userAns = sel ? parseInt(sel.value) : null;
-    const displayUserAns = sel ? q.options[userAns] : "(tidak dijawab)";
-    const displayCorrectAns = q.options[q.answer];
-    const correct = (userAns === q.answer);
-    
-    if (correct) score++;
-    if (!catScores[q.cat]) catScores[q.cat] = { correct: 0, total: 0 };
+ QUESTIONS.forEach((q) => {
+    const sel = document.querySelector(`input[name='q${q.id}']:checked`);
+    const userAns = sel ? sel.value : "Tidak menjawab";
+    const correct = parseInt userAns === q.answer;
+   
+  if (correct) score++;
+
+   // Rekap per kategori
+    if (!catScores[q.cat]) {
+      catScores[q.cat] = { correct: 0, total: 0 };
+    }
     catScores[q.cat].total++;
     if (correct) catScores[q.cat].correct++;
 
+    const displayCorrectAns = q.options[q.answer];
+    const displayUserAns =
+      userAns === "Tidak menjawab"
+        ? "Tidak menjawab"
+        : q.options[userAns] || userAns;
+
+    // Tampilkan hasil tiap soal
     resultHTML += `
       <div style="border:1px solid #ddd; border-radius:8px; padding:10px; margin-bottom:10px; background:#f9fafc;">
         <p><b>${q.id}. ${q.q}</b></p>
         <p><b>Jawabanmu:</b> <span style="color:${correct ? '#16a34a' : '#dc2626'};">${displayUserAns}</span></p>
         <p><b>Jawaban benar:</b> <span style="color:#2563eb;">${displayCorrectAns}</span></p>
         <p><b>Analisis:</b> ${correct ? q.fb_true : q.fb_false}</p>
-        <p><b>Cara pengerjaan:</b><br>${q.work}</p>
-  </div>
-`;
+        <details style="margin-top:6px;">
+          <summary style="cursor:pointer; color:#1d4ed8;">📘 Lihat Langkah Penyelesaian</summary>
+          <div style="margin-left:15px; color:#333; line-height:1.5;">${q.work}</div>
+        </details>
+      </div>
+    `;
   });
 
   // ===============================
@@ -465,27 +481,24 @@ switch (cat) {
     break;
 }
 
-
-  analysis += `
-    <li>
-      <b>${cat}</b> — <i>${mastery}</i> (${rate}% benar)<br>
-      <span style="color:#333;">${desc}</span><br>
-      <u>Penjelasan:</u> ${detail}<br>
-      <u>Saran:</u> ${suggestion}
-    </li><br>
-  `;
-}
+analysis += `
+      <li>
+        <b>${cat}</b> — <i>${mastery}</i> (${rate}% benar)<br>
+        ${desc}<br>
+        <u>Saran:</u> ${suggestion}
+      </li><br>
+    `;
+  }
 
 analysis += "</ul>";
 
 
   const rekom = `
-  <h3>Rekomendasi Belajar:</h3>
+  <h3>Rekomendasi Umum:</h3>
   <p>📘 <b>Modeling</b>: Latih mengubah soal cerita menjadi bentuk persamaan.</p>
   <p>🔢 <b>Perhitungan</b>: Ulangi latihan substitusi & eliminasi langkah demi langkah.</p>
   <p>💡 <b>Konsep</b>: Pahami makna tiap variabel dan hubungan antar persamaan.</p>
   <p>🎯 <b>Strategi</b>: Coba metode eliminasi bila koefisien mudah disejajarkan.</p>
-  <p>👩‍🏫 <b>Strategi Belajar</b>: Gunakan konteks nyata agar siswa mudah memahami SPLTV.</p>
   <p style='color:#1e3a8a; font-weight:500;'>Terus semangat! Latihan rutin akan membuatmu semakin percaya diri 🌟</p>`;
 
   document.getElementById("summary").innerHTML = `
