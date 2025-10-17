@@ -394,7 +394,7 @@ function finishAndShowResults() {
   let catScores = {};
   let resultHTML = "";
 
-  QUESTIONS.forEach(q,i) => {
+  QUESTIONS.forEach((q,i) => {
    const sel = document.querySelector(`input[name='q${q.id}']:checked`);
     const userAns = sel ? parseInt(sel.value) : null;
     const displayUserAns = sel ? q.options[userAns] : "(tidak dijawab)";
@@ -417,7 +417,7 @@ function finishAndShowResults() {
   });
 
   // ===============================
-// ✨ Analisis Hasil & Rekomendasi Detail
+ // ✨ Analisis Hasil & Rekomendasi Detail
 // ===============================
 let analysis = "<h3>Analisis Hasil Belajar:</h3><ul>";
 
